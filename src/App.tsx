@@ -123,7 +123,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-2 md:px-4 py-4 md:py-8">
         <AnimatePresence mode="wait">
           {showProfileSetup ? (
             <motion.div
@@ -163,8 +163,8 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <footer className="mt-20 border-t border-white/5 py-12 bg-black/40">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
+      <footer className="mt-10 md:mt-20 border-t border-white/5 py-8 md:py-12 bg-black/40">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
           <div className="opacity-40 grayscale transition-all hover:grayscale-0 hover:opacity-100">
             <h2 className="text-sm uppercase tracking-widest font-bold mb-4 flex items-center gap-2 justify-center md:justify-start">
               <Trophy className="w-4 h-4" /> Global Leaderboard

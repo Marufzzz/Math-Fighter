@@ -80,22 +80,22 @@ export default function Lobby({ profile, onMatchFound }: LobbyProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 pb-20">
       {/* Left Col: Journey Map */}
-      <div className="lg:col-span-2 space-y-8">
-        <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 rounded-[2.5rem] p-1 shadow-2xl border-4 border-white/5">
+      <div className="lg:col-span-2 space-y-6 md:space-y-8">
+        <section className="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 rounded-[2rem] md:rounded-[2.5rem] p-1 shadow-2xl border-4 border-white/5">
           <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
           
-          <div className="relative z-10 p-10">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="bg-indigo-500/20 p-2 rounded-lg">
-                <Map className="w-6 h-6 text-indigo-400" />
+          <div className="relative z-10 p-6 md:p-10">
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
+              <div className="bg-indigo-500/20 p-2 rounded-lg flex-shrink-0">
+                <Map className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
               </div>
               <div>
-                <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
+                <h2 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-white">
                   The <span className="text-orange-500">Mathverse</span> Journey
                 </h2>
-                <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Defeat legends to unlock ancient secrets</p>
+                <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400">Defeat legends to unlock ancient secrets</p>
               </div>
             </div>
 
@@ -104,14 +104,14 @@ export default function Lobby({ profile, onMatchFound }: LobbyProps) {
               <motion.div 
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="mb-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-3xl p-8 text-center relative overflow-hidden"
+                className="mb-8 md:mb-12 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center relative overflow-hidden"
               >
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-10">
                   <Sparkles className="w-full h-full text-yellow-400" />
                 </div>
-                <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]" />
-                <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter mb-2">The True Math Sage</h3>
-                <p className="text-slate-200 text-sm max-w-lg mx-auto leading-relaxed">
+                <Trophy className="w-12 h-12 md:w-16 md:h-16 text-yellow-500 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]" />
+                <h3 className="text-2xl md:text-3xl font-black italic text-white uppercase tracking-tighter mb-2">The True Math Sage</h3>
+                <p className="text-slate-200 text-xs md:text-sm max-w-lg mx-auto leading-relaxed">
                   You have mastered the equations of the masters. From Pythagoras to Einstein, you've proven that logic is the ultimate power in the universe.
                 </p>
                 <div className="mt-6 inline-flex items-center gap-2 bg-yellow-500 text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
@@ -121,9 +121,9 @@ export default function Lobby({ profile, onMatchFound }: LobbyProps) {
             )}
 
             {/* Journey Timeline */}
-            <div className="space-y-6 relative">
+            <div className="space-y-4 md:space-y-6 relative">
                {/* Vertical Line */}
-               <div className="absolute left-8 top-10 bottom-10 w-1 bg-white/5 rounded-full" />
+               <div className="absolute left-6 md:left-8 top-10 bottom-10 w-1 bg-white/5 rounded-full" />
                
                {MATHEMATICIANS.map((boss, idx) => {
                  const isLocked = idx > storyProgress;
@@ -136,16 +136,16 @@ export default function Lobby({ profile, onMatchFound }: LobbyProps) {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className={`relative flex items-center gap-12 p-6 rounded-3xl transition-all duration-500
+                    className={`relative flex items-center gap-4 md:gap-12 p-4 md:p-6 rounded-3xl transition-all duration-500
                       ${isCurrent ? 'bg-white/10 ring-2 ring-orange-500 shadow-2xl' : 'bg-transparent'}
                       ${isLocked ? 'opacity-40 grayscale' : 'opacity-100'}
                     `}
                    >
                      {/* Node */}
-                     <div className={`relative z-20 w-16 h-16 rounded-full flex items-center justify-center text-4xl shadow-xl
+                     <div className={`relative z-20 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center text-2xl md:text-4xl shadow-xl flex-shrink-0
                         ${isCurrent ? 'bg-orange-500 ring-4 ring-orange-500/30' : isBeaten ? 'bg-indigo-500' : 'bg-slate-800'}
                      `}>
-                       {isLocked ? <Lock className="w-6 h-6 text-slate-500" /> : boss.avatar}
+                       {isLocked ? <Lock className="w-5 h-5 md:w-6 md:h-6 text-slate-500" /> : boss.avatar}
                        
                        {isBeaten && (
                          <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1 border-2 border-slate-900">
@@ -154,21 +154,21 @@ export default function Lobby({ profile, onMatchFound }: LobbyProps) {
                        )}
                      </div>
 
-                     <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-1">
-                           <h3 className="text-xl font-black italic text-white uppercase tracking-tight">{boss.name}</h3>
-                           <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest
+                     <div className="flex-1 min-w-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 md:gap-3 mb-1">
+                           <h3 className="text-base md:text-xl font-black italic text-white uppercase tracking-tight truncate">{boss.name}</h3>
+                           <span className={`self-start text-[7px] md:text-[8px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest
                              ${boss.difficulty === 'easy' ? 'bg-green-500/20 text-green-400' : boss.difficulty === 'medium' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400'}
                            `}>{boss.difficulty}</span>
                         </div>
-                        <p className="text-slate-400 text-xs font-medium italic opacity-70 mb-4">{boss.specialty}</p>
+                        <p className="text-slate-400 text-[10px] md:text-xs font-medium italic opacity-70 mb-3 md:mb-4">{boss.specialty}</p>
                         
                         {!isLocked && isCurrent && (
                           <button 
                             onClick={() => setSelectedBoss(boss)}
-                            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
+                            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95"
                           >
-                            <SwordsIcon className="w-4 h-4" /> Challenge
+                            <SwordsIcon className="w-3 h-3 md:w-4 md:h-4" /> Challenge
                           </button>
                         )}
                         {!isLocked && isBeaten && (
@@ -188,13 +188,13 @@ export default function Lobby({ profile, onMatchFound }: LobbyProps) {
         </section>
 
         {/* Global Stats or lore */}
-        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 flex items-center gap-8">
-            <div className="bg-orange-500/20 p-4 rounded-2xl">
-               <BookOpen className="w-8 h-8 text-orange-400" />
+        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 flex items-center gap-4 md:gap-8">
+            <div className="bg-orange-500/20 p-3 md:p-4 rounded-2xl flex-shrink-0">
+               <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-orange-400" />
             </div>
             <div>
-               <h3 className="text-white font-bold mb-1">The Librarian's Tip</h3>
-               <p className="text-sm text-slate-400">
+               <h3 className="text-white text-sm md:text-base font-bold mb-1">The Librarian's Tip</h3>
+               <p className="text-xs md:text-sm text-slate-400 leading-relaxed">
                  "Every legend you defeat brings you one step closer to the Eternal Calculus. Speed is your shield, logic is your sword."
                </p>
             </div>

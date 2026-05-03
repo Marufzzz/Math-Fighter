@@ -373,7 +373,7 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
   const opAvatar = boss ? { icon: boss.avatar, color: boss.color } : (opponent ? AVATARS.find(a => a.id === opponent.avatarId) : null);
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto">
+    <div className="space-y-4 md:space-y-8 max-w-5xl mx-auto px-2 md:px-0 pb-10">
       <AnimatePresence>
         {boss && showStoryIntro && (
           <motion.div 
@@ -392,16 +392,16 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
                    <h2 className="text-5xl font-black italic text-white uppercase tracking-tighter mb-2">Meeting {boss.name}</h2>
                    <p className="text-orange-500 font-black tracking-[0.3em] uppercase mb-10">Historical Encounter</p>
                    
-                   <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 text-left mb-10 overflow-hidden relative">
+                   <div className="bg-white/5 border border-white/10 rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 text-left mb-8 md:mb-10 overflow-hidden relative">
                       <div className="absolute top-0 right-0 p-20 opacity-5 -mr-10 -mt-10 bg-indigo-500 blur-3xl rounded-full" />
-                      <p className="text-slate-300 text-lg leading-relaxed italic relative z-10">
+                      <p className="text-slate-300 text-base md:text-lg leading-relaxed italic relative z-10">
                         {boss.history}
                       </p>
                    </div>
 
                    <button 
                      onClick={() => setShowStoryIntro(false)}
-                     className="bg-orange-600 hover:bg-orange-500 text-white font-black uppercase tracking-widest px-12 py-5 rounded-2xl shadow-2xl transition-all hover:scale-105 active:scale-95"
+                     className="bg-orange-600 hover:bg-orange-500 text-white font-black uppercase tracking-widest px-8 py-4 md:px-12 md:py-5 rounded-2xl shadow-2xl transition-all hover:scale-105 active:scale-95 text-sm md:text-base"
                    >
                      Begin the Duel
                    </button>
@@ -412,13 +412,13 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
       </AnimatePresence>
 
       {/* HUD Header */}
-      <div className="flex justify-between items-center bg-black/40 border border-white/10 rounded-2xl p-4 md:p-6 backdrop-blur-xl sticky top-20 z-40">
+      <div className="flex justify-between items-center bg-black/40 border border-white/10 rounded-2xl p-3 md:p-6 backdrop-blur-xl sticky top-20 z-40">
          <button onClick={onQuit} className="p-2 hover:bg-white/10 rounded-lg transition-colors group">
            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
          </button>
          
-         <div className="flex-1 flex justify-center items-center gap-10">
-            <div className="flex flex-col items-center">
+         <div className="flex-1 flex justify-center items-center gap-4 md:gap-10">
+            <div className="hidden sm:flex flex-col items-center">
                <span className="text-[10px] uppercase font-black text-slate-500 tracking-widest mb-1 italic">Network Status</span>
                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -435,9 +435,9 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
             </div>
          </div>
 
-         <div className="bg-orange-600/20 px-4 py-2 rounded-xl border border-orange-500/30">
-            <span className="text-xs font-black italic uppercase tracking-tighter">
-              {boss ? `VERSUS ${boss.name.toUpperCase()}` : `Match #${matchId.slice(-4)}`}
+         <div className="bg-orange-600/20 px-3 py-1.5 md:px-4 md:py-2 rounded-xl border border-orange-500/30">
+            <span className="text-[10px] md:text-xs font-black italic uppercase tracking-tighter">
+              {boss ? `${boss.name.toUpperCase()}` : `#${matchId.slice(-4)}`}
             </span>
          </div>
       </div>
@@ -449,7 +449,7 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
           y: [0, 5, -5, 5, -5, 0]
         } : {}}
         transition={{ duration: 0.2 }}
-        className="relative h-[400px] w-full bg-slate-900 rounded-[2.5rem] border-4 border-white/5 shadow-2xl overflow-hidden group"
+        className="relative h-[300px] md:h-[400px] w-full bg-slate-900 rounded-[2rem] md:rounded-[2.5rem] border-4 border-white/5 shadow-2xl overflow-hidden group"
       >
          {/* Grid Background */}
          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
@@ -463,10 +463,10 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
             {damagePopup.map((popup) => (
               <motion.div
                 key={popup.id}
-                initial={{ opacity: 0, y: 200, x: popup.isMe ? 150 : 700 }}
-                animate={{ opacity: 1, y: -100, x: popup.isMe ? 100 : 800 }}
+                initial={{ opacity: 0, y: 150, x: popup.isMe ? 100 : 250 }}
+                animate={{ opacity: 1, y: -50, x: popup.isMe ? 80 : 270 }}
                 exit={{ opacity: 0, scale: 2 }}
-                className="absolute z-50 pointer-events-none font-black text-5xl italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
+                className="absolute z-50 pointer-events-none font-black text-3xl md:text-5xl italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
                 style={{ color: popup.isMe ? '#ff0000' : '#ffaa00' }}
               >
                 -{popup.val}
@@ -478,32 +478,32 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
          <AnimatePresence>
            {match.status === 'active' && !match.winner && (
              <motion.div 
-               initial={{ opacity: 0, scale: 0.5, y: -100 }}
+               initial={{ opacity: 0, scale: 0.5, y: -50 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
-               className="absolute top-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-none"
+               className="absolute top-4 md:top-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-none"
              >
-                <div className="bg-black/60 backdrop-blur-md border-2 border-orange-500/50 rounded-2xl p-6 shadow-[0_0_30px_rgba(249,115,22,0.3)] min-w-[200px] text-center">
-                   <div className="text-[10px] font-black text-orange-400 uppercase tracking-[0.3em] mb-2">Target Lock</div>
-                   <div className="text-4xl font-black italic text-white font-mono tracking-tighter">
+                <div className="bg-black/60 backdrop-blur-md border-2 border-orange-500/50 rounded-2xl p-4 md:p-6 shadow-[0_0_30px_rgba(249,115,22,0.3)] min-w-[160px] md:min-w-[200px] text-center">
+                   <div className="text-[8px] md:text-[10px] font-black text-orange-400 uppercase tracking-[0.3em] mb-1 md:mb-2">Target Lock</div>
+                   <div className="text-2xl md:text-4xl font-black italic text-white font-mono tracking-tighter">
                      {problem.question}
                    </div>
-                   <div className="mt-2 flex justify-center gap-1">
+                   <div className="mt-1 md:mt-2 flex justify-center gap-1">
                       {[...Array(3)].map((_, i) => (
-                        <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < problem.difficulty ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,1)]' : 'bg-white/10'}`} />
+                        <div key={i} className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${i < problem.difficulty ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,1)]' : 'bg-white/10'}`} />
                       ))}
                    </div>
                 </div>
-                <div className="w-1 h-12 bg-gradient-to-b from-orange-500/50 to-transparent" />
+                <div className="w-1 h-8 md:h-12 bg-gradient-to-b from-orange-500/50 to-transparent" />
              </motion.div>
            )}
          </AnimatePresence>
 
          {/* Fighting Stage */}
-         <div className="absolute inset-0 flex justify-between items-end px-12 pb-20">
+         <div className="absolute inset-0 flex justify-between items-end px-4 md:px-12 pb-10 md:pb-20">
             {/* Player 1 (Me) */}
-            <div className="relative flex flex-col items-center">
-               <div className="mb-8 flex flex-col items-center w-40">
-                  <span className="text-[10px] font-black uppercase text-white mb-2 tracking-widest">{me.displayName}</span>
+            <div className="relative flex flex-col items-center scale-75 md:scale-100 origin-bottom">
+               <div className="mb-4 md:mb-8 flex flex-col items-center w-32 md:w-40">
+                  <span className="text-[10px] font-black uppercase text-white mb-1 md:mb-2 tracking-widest truncate max-w-full">{me.displayName}</span>
                   <div className="w-full h-3 bg-slate-950 rounded-full border border-white/10 overflow-hidden shadow-inner relative">
                      <motion.div 
                         initial={{ width: '100%' }}
@@ -524,15 +524,15 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
             </div>
 
             {/* VS Divider */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none scale-150 text-white">
-              <SwordsIcon className="w-48 h-48" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none scale-75 md:scale-150 text-white">
+              <SwordsIcon className="w-32 h-32 md:w-48 md:h-48" />
             </div>
 
             {/* Player 2 (Opponent / Boss) */}
             {opponent ? (
-              <div className="relative flex flex-col items-center">
-                 <div className="mb-8 flex flex-col items-center w-40">
-                    <span className="text-[10px] font-black uppercase text-white mb-2 tracking-widest">{opponent.displayName}</span>
+              <div className="relative flex flex-col items-center scale-75 md:scale-100 origin-bottom">
+                 <div className="mb-4 md:mb-8 flex flex-col items-center w-32 md:w-40">
+                    <span className="text-[10px] font-black uppercase text-white mb-1 md:mb-2 tracking-widest truncate max-w-full">{opponent.displayName}</span>
                     <div className="w-full h-3 bg-slate-950 rounded-full border border-white/10 overflow-hidden shadow-inner relative">
                        <motion.div 
                           initial={{ width: '100%' }}
@@ -579,27 +579,27 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
                     >
                       <Trophy className="w-20 h-20 text-black" strokeWidth={3} />
                     </motion.div>
-                    <h2 className="text-6xl font-black italic uppercase tracking-tighter text-white mb-2">Victory!</h2>
-                    <p className="text-orange-400 font-bold uppercase tracking-[0.3em] mb-8">Legend Defeated</p>
+                    <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white mb-2">Victory!</h2>
+                    <p className="text-orange-400 text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-8">Legend Defeated</p>
                     
                     {boss && (
-                      <div className="relative bg-white/5 rounded-[2rem] p-8 max-w-sm mb-12 border border-white/10 italic text-slate-300 text-base overflow-y-auto max-h-48 custom-scrollbar">
-                        <MessageCircle className="absolute -top-3 -left-3 w-8 h-8 text-indigo-500" />
+                      <div className="relative bg-white/5 rounded-2xl md:rounded-[2rem] p-6 md:p-8 max-w-sm mb-8 md:mb-12 border border-white/10 italic text-slate-300 text-sm md:text-base overflow-y-auto max-h-40 md:max-h-48 custom-scrollbar">
+                        <MessageCircle className="absolute -top-3 -left-3 w-6 h-6 md:w-8 md:h-8 text-indigo-500" />
                         "{boss.defeatQuote}"
                       </div>
                     )}
                   </>
                 ) : (
                   <>
-                    <div key="lose" className="bg-slate-800 p-6 rounded-full mb-8">
-                      <AlertCircle className="w-20 h-20 text-slate-400" />
+                    <div key="lose" className="bg-slate-800 p-4 md:p-6 rounded-full mb-6 md:mb-8">
+                      <AlertCircle className="w-12 h-12 md:w-20 md:h-20 text-slate-400" />
                     </div>
-                    <h2 className="text-6xl font-black italic uppercase tracking-tighter text-white mb-2">Defeat</h2>
-                    <p className="text-slate-500 font-bold uppercase tracking-[0.3em] mb-8">Try again, traveler</p>
+                    <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white mb-2">Defeat</h2>
+                    <p className="text-slate-500 text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-8">Try again, traveler</p>
                     
                     {boss && (
-                      <div className="relative bg-white/5 rounded-[2rem] p-8 max-w-sm mb-12 border border-white/10 italic text-slate-400 text-base overflow-y-auto max-h-48 custom-scrollbar">
-                        <MessageCircle className="absolute -top-3 -left-3 w-8 h-8 text-slate-600" />
+                      <div className="relative bg-white/5 rounded-2xl md:rounded-[2rem] p-6 md:p-8 max-w-sm mb-8 md:mb-12 border border-white/10 italic text-slate-400 text-sm md:text-base overflow-y-auto max-h-40 md:max-h-48 custom-scrollbar">
+                        <MessageCircle className="absolute -top-3 -left-3 w-6 h-6 md:w-8 md:h-8 text-slate-600" />
                         "{boss.victoryQuote}"
                       </div>
                     )}
@@ -608,7 +608,7 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
                 
                 <button 
                   onClick={onQuit}
-                  className="bg-white text-black px-12 py-4 rounded-2xl font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+                  className="bg-white text-black px-8 py-3 md:px-12 md:py-4 rounded-xl md:rounded-2xl font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl text-sm md:text-base"
                 >
                   Return to Journey
                 </button>
@@ -624,24 +624,25 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
-            className="flex flex-col items-center gap-6"
+            className="flex flex-col items-center gap-4"
           >
-            <div className="w-full max-w-xs relative group">
+            <div className="w-full max-w-xs relative group px-4">
                <form onSubmit={handleSubmit} className="relative">
                   <input 
                     type="number"
+                    inputMode="numeric"
                     autoFocus
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
-                    placeholder="ENTER RESULT"
+                    placeholder="RESULT"
                     className={`
-                      w-full bg-slate-900 border-b-4 rounded-2xl p-6 text-3xl text-center font-black outline-none transition-all
+                      w-full bg-slate-900 border-b-4 rounded-xl md:rounded-2xl p-4 md:p-6 text-2xl md:text-3xl text-center font-black outline-none transition-all
                       ${error ? 'border-red-500 text-red-500' : 'border-orange-500 text-white focus:ring-4 focus:ring-orange-500/10'}
                     `}
                   />
                </form>
-               <div className="mt-4 flex flex-col items-center gap-1 opacity-50">
-                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">
+               <div className="mt-2 md:mt-4 flex flex-col items-center gap-1 opacity-50">
+                  <span className="text-[8px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest text-center px-4">
                     Correct answers trigger combat sequences
                   </span>
                </div>
