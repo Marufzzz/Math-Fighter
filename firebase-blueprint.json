@@ -1,0 +1,50 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile and game statistics",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "avatarId": { "type": "string" },
+        "totalWins": { "type": "integer" },
+        "totalMatches": { "type": "integer" },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "storyProgress": { "type": "integer" }
+      },
+      "required": ["displayName", "avatarId"]
+    },
+    "Match": {
+      "title": "Game Match",
+      "description": "Real-time state of a fighting match",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["waiting", "active", "finished"] },
+        "players": {
+          "type": "object",
+          "description": "Mapping of userId to player state"
+        },
+        "winner": { "type": "string" },
+        "isAi": { "type": "boolean" },
+        "difficulty": { "type": "string" },
+        "bossId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Real-time matches"
+    },
+    "/leaderboard/{userId}": {
+      "schema": "User",
+      "description": "High scores"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+node_modules
+dist
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.git
+.gitignore
+.prettierrc
+README.md
+firebase-applet-config.json
+firestore.rules
+firebase-blueprint.json
+DRAFT_firestore.rules
+security_spec.md
+firestore.rules.test.ts

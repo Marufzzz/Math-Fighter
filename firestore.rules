@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['displayName', 'avatarId'])
+        && data.displayName is string && data.displayName.size() <= 50
+        && data.avatarId is string && data.avatarId.size() <= 20
+        && (!data.keys().contains('storyProgress') || data.storyProgress is int)
+        && (!data.keys().contains('totalWins') || data.totalWins is int)
+        && (!data.keys().contains('totalMatches') || data.totalMatches is int);
+    }
+
+    function isValidMatch(data) {
+      return data.status in ['waiting', 'active', 'finished']
+        && data.players is map
+        && data.isAi is bool
+        && (!data.keys().contains('difficulty') || data.difficulty in ['easy', 'medium', 'hard'])
+        && (!data.keys().contains('bossId') || data.bossId is string);
+    }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && (
+          incoming().diff(existing()).affectedKeys().hasAll(['lastSeen']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'avatarId', 'totalWins', 'totalMatches', 'lastSeen', 'storyProgress'])
+        );
+    }
+
+    // --- Matches ---
+    match /matches/{matchId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn() && (resource.data.status == 'waiting' || resource.data.players.keys().hasAny([request.auth.uid]));
+
+      function isPlayerInMatch() {
+        return existing().players.keys().hasAny([request.auth.uid]);
+      }
+
+      allow create: if isSignedIn() && isValidMatch(incoming()) && (
+        // Case: Multiplayer Wait Room
+        (incoming().status == 'waiting' && incoming().isAi == false 
+         && incoming().players.keys().size() == 1
+         && incoming().players.keys().hasAll([request.auth.uid]))
+        ||
+        // Case: AI Match (Starts active)
+        (incoming().status == 'active' && incoming().isAi == true 
+         && incoming().players.keys().size() == 2
+         && incoming().players.keys().hasAll([request.auth.uid, 'ai_bot']))
+      );
+
+      allow update: if isSignedIn() && isValidMatch(incoming()) && (
+        // Action: Join
+        (existing().status == 'waiting' && incoming().status == 'active' 
+         && incoming().players.keys().size() == 2
+         && incoming().players.keys().hasAll([request.auth.uid])
+         && incoming().players.keys().hasAll(existing().players.keys())
+         && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'players', 'updatedAt']))
+        ||
+        // Action: Game Action (Attack/Answer/Finish/Update stats)
+        (isPlayerInMatch() && (existing().status == 'active' || existing().status == 'finished')
+         && incoming().diff(existing()).affectedKeys().hasOnly(['players', 'status', 'winner', 'updatedAt']))
+      );
+    }
+  }
+}

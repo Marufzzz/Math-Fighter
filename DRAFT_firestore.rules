@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['displayName', 'avatarId'])
+        && data.displayName is string && data.displayName.size() <= 50
+        && data.avatarId is string && data.avatarId.size() <= 20;
+    }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn() && resource.data.displayName != null; // Secure list check
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming())
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'avatarId', 'totalWins', 'totalMatches', 'lastSeen'])
+        );
+    }
+
+    // --- Matches ---
+    match /matches/{matchId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn() && (resource.data.status == 'waiting' || resource.data.players.keys().hasAny([request.auth.uid]));
+
+      function isPlayerInMatch() {
+        return existing().players.keys().hasAny([request.auth.uid]);
+      }
+
+      allow create: if isSignedIn() 
+        && isValidId(matchId)
+        && incoming().status == 'waiting'
+        && incoming().players.keys().size() == 1
+        && incoming().players.keys().hasAll([request.auth.uid]);
+
+      allow update: if isSignedIn() && (
+        // Action: Join
+        (existing().status == 'waiting' && incoming().status == 'active' 
+         && incoming().players.keys().size() == 2
+         && incoming().players.keys().hasAll([request.auth.uid])
+         && incoming().players.keys().hasAll(existing().players.keys())
+         && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'players', 'updatedAt']))
+        ||
+        // Action: Game Action (Attack/Answer)
+        (existing().status == 'active' && isPlayerInMatch()
+         && incoming().status == 'active'
+         && incoming().diff(existing()).affectedKeys().hasOnly(['players', 'updatedAt']))
+        ||
+        // Action: Finish
+        (existing().status == 'active' && isPlayerInMatch()
+         && incoming().status == 'finished'
+         && incoming().diff(existing()).affectedKeys().hasOnly(['status', 'winner', 'updatedAt', 'players']))
+      );
+    }
+
+    // --- Leaderboard ---
+    match /leaderboard/{userId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only updated via cloud functions or implicitly through user stats
+    }
+  }
+}
