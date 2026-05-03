@@ -449,24 +449,24 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
           y: [0, 5, -5, 5, -5, 0]
         } : {}}
         transition={{ duration: 0.2 }}
-        className="relative h-[300px] md:h-[400px] w-full bg-slate-900 rounded-[2rem] md:rounded-[2.5rem] border-4 border-white/5 shadow-2xl overflow-hidden group"
+        className="relative w-full aspect-video md:h-[400px] md:aspect-auto bg-slate-900 rounded-[1.5rem] md:rounded-[2.5rem] border-4 border-white/5 shadow-2xl overflow-hidden group"
       >
          {/* Grid Background */}
          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60 pointer-events-none" />
 
          {/* Floor */}
-         <div className="absolute bottom-0 w-full h-24 bg-slate-800/50 border-t border-white/10 backdrop-blur-sm" />
+         <div className="absolute bottom-0 w-full h-8 md:h-24 bg-slate-800/50 border-t border-white/10 backdrop-blur-sm" />
 
          {/* Damage Popups */}
          <AnimatePresence>
             {damagePopup.map((popup) => (
               <motion.div
                 key={popup.id}
-                initial={{ opacity: 0, y: 150, x: popup.isMe ? 100 : 250 }}
-                animate={{ opacity: 1, y: -50, x: popup.isMe ? 80 : 270 }}
+                initial={{ opacity: 0, y: 100, x: popup.isMe ? '15%' : '65%' }}
+                animate={{ opacity: 1, y: -50, x: popup.isMe ? '10%' : '70%' }}
                 exit={{ opacity: 0, scale: 2 }}
-                className="absolute z-50 pointer-events-none font-black text-3xl md:text-5xl italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
+                className="absolute z-50 pointer-events-none font-black text-2xl md:text-5xl italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]"
                 style={{ color: popup.isMe ? '#ff0000' : '#ffaa00' }}
               >
                 -{popup.val}
@@ -480,29 +480,24 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
              <motion.div 
                initial={{ opacity: 0, scale: 0.5, y: -50 }}
                animate={{ opacity: 1, scale: 1, y: 0 }}
-               className="absolute top-4 md:top-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-none"
+               className="absolute top-2 md:top-12 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center pointer-events-none"
              >
-                <div className="bg-black/60 backdrop-blur-md border-2 border-orange-500/50 rounded-2xl p-4 md:p-6 shadow-[0_0_30px_rgba(249,115,22,0.3)] min-w-[160px] md:min-w-[200px] text-center">
-                   <div className="text-[8px] md:text-[10px] font-black text-orange-400 uppercase tracking-[0.3em] mb-1 md:mb-2">Target Lock</div>
-                   <div className="text-2xl md:text-4xl font-black italic text-white font-mono tracking-tighter">
+                <div className="bg-black/60 backdrop-blur-md border-2 border-orange-500/50 rounded-xl md:rounded-2xl p-3 md:p-6 shadow-[0_0_30px_rgba(249,115,22,0.3)] min-w-[140px] md:min-w-[200px] text-center">
+                   <div className="text-[7px] md:text-[10px] font-black text-orange-400 uppercase tracking-[0.3em] mb-1 md:mb-2">Target Lock</div>
+                   <div className="text-xl md:text-4xl font-black italic text-white font-mono tracking-tighter">
                      {problem.question}
                    </div>
-                   <div className="mt-1 md:mt-2 flex justify-center gap-1">
-                      {[...Array(3)].map((_, i) => (
-                        <div key={i} className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${i < problem.difficulty ? 'bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,1)]' : 'bg-white/10'}`} />
-                      ))}
-                   </div>
                 </div>
-                <div className="w-1 h-8 md:h-12 bg-gradient-to-b from-orange-500/50 to-transparent" />
+                <div className="w-1 h-4 md:h-12 bg-gradient-to-b from-orange-500/50 to-transparent" />
              </motion.div>
            )}
          </AnimatePresence>
 
          {/* Fighting Stage */}
-         <div className="absolute inset-0 flex justify-between items-end px-4 md:px-12 pb-10 md:pb-20">
+         <div className="absolute inset-0 flex justify-between items-end px-4 md:px-12 pb-4 md:pb-20">
             {/* Player 1 (Me) */}
-            <div className="relative flex flex-col items-center scale-75 md:scale-100 origin-bottom">
-               <div className="mb-4 md:mb-8 flex flex-col items-center w-32 md:w-40">
+            <div className="relative flex flex-col items-center scale-[0.6] md:scale-100 origin-bottom">
+               <div className="mb-2 md:mb-8 flex flex-col items-center w-32 md:w-40">
                   <span className="text-[10px] font-black uppercase text-white mb-1 md:mb-2 tracking-widest truncate max-w-full">{me.displayName}</span>
                   <div className="w-full h-3 bg-slate-950 rounded-full border border-white/10 overflow-hidden shadow-inner relative">
                      <motion.div 
@@ -512,7 +507,6 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
                         className={`h-full ${me.hp < 30 ? 'bg-red-500' : 'bg-orange-500'}`} 
                      />
                   </div>
-                  <span className="text-[8px] font-mono text-slate-500 mt-1">{Math.max(0, me.hp)} / 100 HP</span>
                </div>
                
                <Fighter 
@@ -524,14 +518,14 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
             </div>
 
             {/* VS Divider */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none scale-75 md:scale-150 text-white">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none scale-50 md:scale-150 text-white">
               <SwordsIcon className="w-32 h-32 md:w-48 md:h-48" />
             </div>
 
             {/* Player 2 (Opponent / Boss) */}
             {opponent ? (
-              <div className="relative flex flex-col items-center scale-75 md:scale-100 origin-bottom">
-                 <div className="mb-4 md:mb-8 flex flex-col items-center w-32 md:w-40">
+              <div className="relative flex flex-col items-center scale-[0.6] md:scale-100 origin-bottom">
+                 <div className="mb-2 md:mb-8 flex flex-col items-center w-32 md:w-40">
                     <span className="text-[10px] font-black uppercase text-white mb-1 md:mb-2 tracking-widest truncate max-w-full">{opponent.displayName}</span>
                     <div className="w-full h-3 bg-slate-950 rounded-full border border-white/10 overflow-hidden shadow-inner relative">
                        <motion.div 
@@ -541,7 +535,6 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
                           className={`h-full ${opponent.hp < (opponent.maxHp * 0.3) ? 'bg-red-500' : 'bg-red-500'}`} 
                        />
                     </div>
-                    <span className="text-[8px] font-mono text-slate-500 mt-1">{Math.max(0, opponent.hp)} / {opponent.maxHp} HP</span>
                  </div>
 
                  <Fighter 
@@ -553,13 +546,14 @@ export default function GameView({ matchId, profile, onQuit }: GameViewProps) {
                  />
               </div>
             ) : (
-              <div className="flex flex-col items-center opacity-30 animate-pulse text-white">
+              <div className="flex flex-col items-center opacity-30 animate-pulse text-white scale-50 md:scale-100">
                 <div className="w-32 h-4 bg-slate-800 rounded-full mb-6" />
                 <div className="text-8xl">👤</div>
                 <p className="text-[10px] font-bold uppercase mt-4">Waiting for Target...</p>
               </div>
             )}
          </div>
+
 
          {/* Victory/Defeat Overlay */}
          <AnimatePresence>
