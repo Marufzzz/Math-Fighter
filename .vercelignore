@@ -9,7 +9,6 @@ dist
 .gitignore
 .prettierrc
 README.md
-firebase-applet-config.json
 firestore.rules
 firebase-blueprint.json
 DRAFT_firestore.rules
